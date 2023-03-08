@@ -43,6 +43,7 @@ export const parseCodeBlock = (
     const isRaw = Reflect.has(props, 'raw')
     const isInline = Reflect.has(props, 'inline')
     const isDebug = Reflect.has(props, 'debug')
+    const isIframe = Reflect.has(props, 'iframe')
     const isBuild = app.env.isBuild
     const isVueCode = /^\.(vue|jsx|tsx)$/.test(path.extname(props.src))
 
@@ -66,6 +67,13 @@ export const parseCodeBlock = (
     if (isInline && isVueCode) {
       html[i] = parseInline(node, dep)
 
+      store.add(dep)
+
+      continue
+    }
+
+    if (isRaw && isIframe) {
+      dep.isGenerateIframe = true
       store.add(dep)
 
       continue
